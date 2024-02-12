@@ -7,10 +7,16 @@ output: html_document
 
 ```{r}
 library(tidyverse)
-read_csv("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/collins-scrabble-words-2019.txt?token=GHSAT0AAAAAACNG3HADTWZIHJVZ7G2O4TMWZOKT67A", col_names=TRUE) 
-read_csv("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/google-10000-english-usa-no-swears.txt?token=GHSAT0AAAAAACNG3HACSATG6KVQIW7YMC2CZOKUDTA", col_names=TRUE) 
+library(curl)
+
+# use a public repo because it liked the links to end in .txt instead of the token
+w11 <- curl("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/collins-scrabble-words-2019.txt") 
+w22 <- curl("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/google-10000-english-usa-no-swears.txt") 
+w1 <- read_csv(w11)
+w2 <- read_csv(w22)
 
 load_dictionary()
+inner <- inner_join(c, p, by = c("fullName" = "First Author"))
 ```
 
 ## R Markdown
