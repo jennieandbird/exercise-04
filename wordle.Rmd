@@ -15,8 +15,30 @@ library(dplyr)
 # use a public repo because it liked the links to end in .txt instead of the token
 w11 <- curl("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/collins-scrabble-words-2019.txt") 
 w22 <- curl("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/google-10000-english-usa-no-swears.txt")
+<<<<<<< HEAD
 w33 <- "https://raw.githubusercontent.com/jennieandbird/exercise-04/main/google-10000-english-usa-no-swears.txt"
 w32 <- "https://raw.githubusercontent.com/jennieandbird/exercise-04/main/collins-scrabble-words-2019.txt"
+=======
+#Step 1: Create Function
+ load_dictionary <- function(filename) {
+  filepath <- paste0(filename, ".txt")
+  
+  # Check if the file exists
+  if (!file.exists(filepath)) {
+    stop("File does not exist: ", filepath)
+  }
+   data <- read.csv(filepath, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+     # Assuming the column containing words is named 'word'
+  # Filter to include only 5-letter words
+  filtered_data <- data[nchar(data$word) == 5, ]
+  
+  return(filtered_data)
+}
+##
+
+
+five_letter_words <- words[grepl("\\b\\w{5}\\b", words)]
+>>>>>>> 9dae3dfb2ce7a80daac6d2aaad75eddfaeae621b
 
 load_dictionary <- function(filename) {
   v1 <- read_csv(filename)}
