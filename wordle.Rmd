@@ -5,41 +5,26 @@ date: "2024-02-12"
 output: html_document
 ---
 
-```{r}
+```{r Step_1}
+# Create your own custom function called load_dictionary() that takes a single argument, “filename”, that can be used to read in either of the two data files you downloaded.
+
 library(tidyverse)
 library(curl)
 library(dplyr)
 
 # use a public repo because it liked the links to end in .txt instead of the token
 w11 <- curl("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/collins-scrabble-words-2019.txt") 
-w22 <- curl("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/google-10000-english-usa-no-swears.txt") 
+w22 <- curl("https://raw.githubusercontent.com/jennieandbird/exercise-04/main/google-10000-english-usa-no-swears.txt")
+w33 <- "https://raw.githubusercontent.com/jennieandbird/exercise-04/main/google-10000-english-usa-no-swears.txt"
+w32 <- "https://raw.githubusercontent.com/jennieandbird/exercise-04/main/collins-scrabble-words-2019.txt"
 
 load_dictionary <- function(filename) {
-  # Check if the file exists to prevent readLines from throwing an error
-  if (!file.exists(filename)) {
-    stop("The file does not exist: ", filename)
-  }
-  
-  # Read the file into a vector, each element is a line/word from the file
-  words <- readLines(filename, warn = FALSE)
-  
-  # Optionally, you might want to remove any potential whitespace
-  # from the beginning and end of each word
-  words <- trimws(words)
-  
-  return(words)
-}
+  v1 <- read_csv(filename)}
 
+# Once you have created your function, use that function to create two variables, solution_list and valid_list, that, respectively contain vectors of possible solution words and valid words to guess. That is, you should be able to run the following to create these two vectors
 
-
-
-
-
-
-
-
-
-
+valid_list <- load_dictionary(w33)
+solution_list <- load_dictionary(w32)
 
 w1 <- read_csv(w11)
   df <- w1 |>
