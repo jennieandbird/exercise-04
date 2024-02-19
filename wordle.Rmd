@@ -102,14 +102,14 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
 
   
 evaluate_guess <- function(guess1, solution){
-  # [4] Compare the guess to the solution word and generate feedback with a separate helper function  
+  # [4] Compare the guess to the solution word and generate feedback with a separate helper function
+  # make a loop that goes letter by letter, assigning +, *, or - to say if the letter is correct AND in the right place, correct but not in the right place, or incorrect. Save this info as a vector, like "*, -, -, -, *"
     # identify the incorrect letters
   incorrectletters <- setdiff(paste(guess1vector), paste(solutionvector))
     # identify the letters that exist in the word (in any order)
   lettersinword <- intersect(guess1vector, solutionvector)
     # identify the spots that are correct letter and correct order
   perfectletters <- (guess1vector == solutionvector)
-  # I feel like it needs a loop to address each guess, but I'm not there yet!
 }
 
 ```
