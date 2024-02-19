@@ -71,30 +71,38 @@ solution <- pick_solution(solution_list)
 ``` {r Step_4}
 # Now, to tackle the bulk of the problem, create two more functions. The first should be called play_wordle() and it should take three arguments: [1] the answer to the puzzle (the value of your solution variable), [2] a list of valid guesses (the contents of your valid_list variable), and [3] a value for “number of guesses”, which you should set to the original Wordle game default of 6.
 
-play_wordle <- function(solution, valid_list, num_guesses=6){
+play_wordle <- function(solution, valid_list, num_guesses = 6){
   # [1] At the onset, tell the player the rules
-  print("You have 6 chances to guess a 5-letter word.")
-  # [2] Display what letters the player has not guessed yet
+  num_guesses <- 6
+  print(paste("You have", num_guesses, "chances to guess a 5-letter word."))
+  guesses <- 0
   #   Starting out, LETTERS is all of the letters (because the player has not guessed any yet) but will need to update with subtracted letters that were guessed
-  print("Letters remaining:")
-  print(LETTERS)
+  letters_remaining <- LETTERS
+  # [2] Display what letters the player has not guessed yet
+  while (guesses < num_guesses) print(paste(c("Letters remaining: ", letters_remaining), collapse = " ")
   # [3] Prompt the player for a guess, read in their guess, and check if it is valid
-  guess <- readline("Try to guess the word!")
+  guess <- readline("Try to guess the word!") 
+  if(!(guess %in% solution_list)) {print("Word not in list, try another please!")}
+  if(nchar(guess) != 5) {print("Word needs to be 5 letters long.")}
+  # make sure it's in all caps
+  guess <- toupper(guess)
+  # make the player's guess into a vector of single-character letters
+  guess1 <- str_extract_all(guess, boundary("character"))
   # [4] (See "evaluate_guess" function below)
   # [5] Update the list of letters not yet guessed
-  setdiff(guess, LETTERS)
+  paste(setdiff(guess1, LETTERS))
   # [6] Check if the puzzle was solved; if so, print out guess and feedback history, if not, prompt for another guess
   # [7] If all guesses are exhausted, indicate the player lost and print out guess and feedback history
     }
 
   
-evaluate_guess <- function(){
+evaluate_guess <- function(guess1, solution){
   # [4] Compare the guess to the solution word and generate feedback with a separate helper function  
-  # make the player's guess into a vector of single-character letters
-  guess1 <- str_extract_all(guess, boundary("character"))
   # compare player's guess with the solution
-  compare <- grepl(solution, guess1, ignore.case = TRUE, fixed = TRUE)
-  
+  result <- ifelse(guess1 %in% solution, "Correct", "Incorrect")
+  result <- ifelse(guess1 == solution, "Perfect!")
+  # this part needs to be a loop but I haven't figured it out yet!
+  for (i in 1:5 { if (guess1[i] == solution[i])}) 
 }
 
 ```
@@ -102,33 +110,4 @@ evaluate_guess <- function(){
 ```{r extra_code}
 # putting this extra code here in case we need it:
 
-w1 <- read_csv(w11)
-  df <- w1 |>
-  filter(nchar(words) == 5)
-
-w2 <- read_csv(w22)
-  df <- w2 |>
-  filter(nchar(words) == 5)
-
-
-joined_words <- inner_join(w1, w2, by = c("words"))
-
-
- load_dictionary <- function(filename) {
-  filepath <- paste0(filename, ".txt")
-  
-  # Check if the file exists
-  if (!file.exists(filepath)) {
-    stop("File does not exist: ", filepath)
-  }
-   data <- read.csv(filepath, header = TRUE, sep = ",", stringsAsFactors = FALSE)
-     # Assuming the column containing words is named 'word'
-  # Filter to include only 5-letter words
-  filtered_data <- data[nchar(data$word) == 5, ]
-  
-  return(filtered_data)
-}
-##
-
-five_letter_words <- words[grepl("\\b\\w{5}\\b", words)]
 ```
