@@ -81,9 +81,9 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
   #   Starting out, LETTERS is all of the letters (because the player has not guessed any yet) but will need to update with subtracted letters that were guessed
   letters_remaining <- LETTERS
   # [2] Display what letters the player has not guessed yet
-  while (guesses < num_guesses) print(paste(c("Letters remaining: ", letters_remaining), collapse = " ")
+  while (guesses < num_guesses) print(paste(c("Letters remaining: ", letters_remaining), collapse = " "),
   # [3] Prompt the player for a guess, read in their guess, and check if it is valid
-  guess <- readline("Try to guess the word!") 
+  guess <- readline("Try to guess the word!"), 
   if(!(guess %in% solution_list)) {print("Word not in list, try another please!")}
   if(nchar(guess) != 5) {print("Word needs to be 5 letters long.")}
   # make sure it's in all caps
@@ -94,7 +94,8 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
   guess1vector <- unlist(guess1)
   # [4] (See "evaluate_guess" function below)
   # [5] Update the list of letters not yet guessed
-  paste(setdiff(guess1vector,LETTERS))
+  letters_remaining <- setdiff(paste(LETTERS), paste(guess1vector))
+  print(letters_remaining)
   # [6] Check if the puzzle was solved; if so, print out guess and feedback history, if not, prompt for another guess
   # [7] If all guesses are exhausted, indicate the player lost and print out guess and feedback history
     }
@@ -102,11 +103,13 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
   
 evaluate_guess <- function(guess1, solution){
   # [4] Compare the guess to the solution word and generate feedback with a separate helper function  
-  # compare player's guess with the solution
-  setdiff(paste(guess1vector), paste(solutionvector))
+    # identify the incorrect letters
+  incorrectletters <- setdiff(paste(guess1vector), paste(solutionvector))
+    # identify the letters that exist in the word (in any order)
   lettersinword <- intersect(guess1vector, solutionvector)
-  # this part needs to be a loop but I haven't figured it out yet!
-  for (i in 1:5 { if (guess1[i] == solution[i])}) 
+    # identify the spots that are correct letter and correct order
+  perfectletters <- (guess1vector == solutionvector)
+  # I feel like it needs a loop to address each guess, but I'm not there yet!
 }
 
 ```
