@@ -75,9 +75,11 @@ play_wordle <- function(solution, valid_list, num_guesses=6){
   # [1] At the onset, tell the player the rules
   print("You have 6 chances to guess a 5-letter word.")
   # [2] Display what letters the player has not guessed yet
+  #   Starting out, LETTERS is all of the letters (because the player has not guessed any yet) but will need to update with subtracted letters that were guessed
   print("Letters remaining:")
   print(LETTERS)
   # [3] Prompt the player for a guess, read in their guess, and check if it is valid
+  guess <- readline("Try to guess the word!")
   # [4] (See "evaluate_guess" function below)
   # [5] Update the list of letters not yet guessed
   setdiff(guess, LETTERS)
@@ -88,6 +90,11 @@ play_wordle <- function(solution, valid_list, num_guesses=6){
   
 evaluate_guess <- function(){
   # [4] Compare the guess to the solution word and generate feedback with a separate helper function  
+  # make the player's guess into a vector of single-character letters
+  guess1 <- str_extract_all(guess, boundary("character"))
+  # compare player's guess with the solution
+  compare <- grepl(solution, guess1, ignore.case = TRUE, fixed = TRUE)
+  
 }
 
 ```
