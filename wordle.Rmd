@@ -5,6 +5,10 @@ date: "2024-02-12"
 output: html_document
 ---
 
+# Exercise 04: Program a Word Game
+
+Run the code chunk below (**Step_1**) to load two lists of words, **solution_list** and **valid_list**.
+
 ```{r Step_1}
 
 library(tidyverse)
@@ -36,6 +40,9 @@ str(solution_list)
 # Step 1 complete! (I think!)
 
 ```
+
+Next, run the code chunk below (**Step_2**) to make sure the **solution_list** only includes words that also appear on **valid_list**.
+
 ```{r Step_2}
 # Winnow your variable solution_list to only include words that are included in valid_list. There are multiple ways that you could do this, but the set operation function, intersection() is an easy way. Use R help to look at the documentation for the intersection() function to see if you can get that to work. 
 
@@ -48,7 +55,10 @@ print(solution_list)
 # solution_list updated to include 8336 words, down from 9884 words.
 
 ```
-``` {r Step_3}
+
+Running this code chunk (**Step_3**) will create a function (**pick_solution**) that randomly picks a word for you to guess. It will save that word as a list of letters (**solution**) and a vector of letters (**solutionvector**).
+
+```{r Step_3}
 # Write a custom function called pick_solution() that [1] removes all words from solution_list that are not 5 letters in length, [2] then randomly chooses a single word from those that remain, and [3] then splits that word into a vector of single-character elements. You should be able to pass your solution_list vector as the argument to the function.
 
 pick_solution <- function(solution_list){
@@ -69,10 +79,12 @@ solutionvector <- unlist(solution)
 
 ```
 
+Now it's time to guess the word! Run the code chunk below (**Step_4**) to begin.
 
-``` {r Step_4}
+```{r Step_4}
 # Now, to tackle the bulk of the problem, create two more functions. The first should be called play_wordle() and it should take three arguments: [1] the answer to the puzzle (the value of your solution variable), [2] a list of valid guesses (the contents of your valid_list variable), and [3] a value for “number of guesses”, which you should set to the original Wordle game default of 6.
 
+# The function doesn't work as a whole, so going to try line by line until it works. (See below.)
 play_wordle <- function(solution, valid_list, num_guesses = 6){
   # [1] At the onset, tell the player the rules
   num_guesses <- 6
@@ -81,9 +93,8 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
   #   Starting out, LETTERS is all of the letters (because the player has not guessed any yet) but will need to update with subtracted letters that were guessed
   letters_remaining <- LETTERS
   # [2] Display what letters the player has not guessed yet
-  while (guesses < num_guesses) print(paste(c("Letters remaining: ", letters_remaining), collapse = " "),
   # [3] Prompt the player for a guess, read in their guess, and check if it is valid
-  guess <- readline("Try to guess the word!"), 
+  guess <- readline("Try to guess the word!") 
   if(!(guess %in% solution_list)) {print("Word not in list, try another please!")}
   if(nchar(guess) != 5) {print("Word needs to be 5 letters long.")}
   # make sure it's in all caps
@@ -94,23 +105,59 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
   guess1vector <- unlist(guess1)
   # [4] (See "evaluate_guess" function below)
   # [5] Update the list of letters not yet guessed
-  letters_remaining <- setdiff(paste(LETTERS), paste(guess1vector))
+  letters_remaining <- setdiff(paste(letters_remaining), paste(guess1vector))
   print(letters_remaining)
   # [6] Check if the puzzle was solved; if so, print out guess and feedback history, if not, prompt for another guess
   # [7] If all guesses are exhausted, indicate the player lost and print out guess and feedback history
     }
 
-  
-evaluate_guess <- function(guess1, solution){
-  # [4] Compare the guess to the solution word and generate feedback with a separate helper function
-  # make a loop that goes letter by letter, assigning +, *, or - to say if the letter is correct AND in the right place, correct but not in the right place, or incorrect. Save this info as a vector, like "*, -, -, -, *"
-    # identify the incorrect letters
-  incorrectletters <- setdiff(paste(guess1vector), paste(solutionvector))
-    # identify the letters that exist in the word (in any order)
-  lettersinword <- intersect(guess1vector, solutionvector)
-    # identify the spots that are correct letter and correct order
-  perfectletters <- (guess1vector == solutionvector)
-}
+# Line-by-line attempt at the steps of the play_wordle function:
+num_guesses <- 6
+print(paste("You have", num_guesses, "chances to guess a 5-letter word."))
+guesses <- 0
+letters_remaining <- LETTERS
+print(LETTERS)
+guess <- readline("Try to guess the word!")
+if(!(guess %in% solution_list)) {print("That's not in our word list, so it's not the exact solution! You can try another word or continue with your guess to see what letters match.")}
+if(nchar(guess) != 5) {print("Word needs to be 5 letters long.")}
+guess <- toupper(guess)
+guess1 <- str_extract_all(guess, boundary("character"))
+guess1vector <- unlist(guess1)
+letters_remaining <- setdiff(paste(letters_remaining), paste(guess1vector))
+print(letters_remaining)
+
+# the evaluate_guess function doesn't work as a whole, so trying it line-by-line below the function attempt:
+
+evaluate_guess <- function(guess1vector, solutionvector){
+  # set up a placeholder vector with 5 spaces
+  hintvector <- c(1, 2, 3, 4, 5)
+  # we're evaluating a guess now, so need to add that to the total
+  guesses <- (guesses + 1)
+  # identify the spots that are correct letter and correct order; mark them with "+"
+  for (i in 1:5) {
+   if (guess1vector[i] == solutionvector[i]) {
+     hintvector[i] <- "+"}}
+  # identify the letters that exist in the word (in any order); mark them with "*"
+  # also, mark the leftover letters with "-" to indicate they're not in the solution
+  for (i in 1:5) {
+    if (hintvector[i] != "+") {
+      lettersinword <- match(guess1vector[i], solutionvector)
+      if (!is.na(lettersinword)) {
+        hintvector[i] <- "*"}
+      else {hintvector[i] <- "-"}}}}
+
+# Line-by-line attempt at the steps of the evaluate_guess function:
+hintvector <- c(1, 2, 3, 4, 5)
+guesses <- (guesses + 1)
+for (i in 1:5) {
+   if (guess1vector[i] == solutionvector[i]) {
+     hintvector[i] <- "+"}}
+  for (i in 1:5) {
+    if (hintvector[i] != "+") {
+      lettersinword <- match(guess1vector[i], solutionvector)
+      if (!is.na(lettersinword)) {
+        hintvector[i] <- "*"}
+      else {hintvector[i] <- "-"}}}
 
 ```
 
