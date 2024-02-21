@@ -83,14 +83,15 @@ Now it's time to guess the word! Run the code chunk below (**Step_4**) to begin.
 
 ```{r Step_4}
 # The function doesn't work as a whole, so going to try line by line until it works. (See below.)
-play_wordle <- function(solution, valid_list, num_guesses = 6){
+play_wordle <- function(solutionvector, valid_list, num_bookguesses = 6){
   print("You have 6 chances to guess a 5-letter word.")
   letters_remaining <- LETTERS
   guesses <- 0
-  
+  print(head(valid_list))
   while(guesses < num_guesses) {
     guess <- toupper(readline(prompt = "Try to guess the word: "))
-    
+    print(guess)
+    print(head(valid_list))
     # Validate the guess
     if(nchar(guess) != 5) {
       print("Word needs to be 5 letters long.")
@@ -117,7 +118,7 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
   }
 }
 
-
+play_wordle(solutionvector, solution_list, num_guesses = 6)
 ```
 
 ```{r extra_code}
