@@ -87,6 +87,7 @@ Now it's time to guess the word! Run the code chunk below (**Step_4**) to begin.
 # The function doesn't work as a whole, so going to try line by line until it works. (See below.)
 play_wordle <- function(solution, valid_list, num_guesses = 6){
   # [1] At the onset, tell the player the rules
+  print("Entered play_wordle func")
   num_guesses <- 6
   print(paste("You have", num_guesses, "chances to guess a 5-letter word."))
   guesses <- 0
@@ -94,7 +95,9 @@ play_wordle <- function(solution, valid_list, num_guesses = 6){
   letters_remaining <- LETTERS
   # [2] Display what letters the player has not guessed yet
   # [3] Prompt the player for a guess, read in their guess, and check if it is valid
-  guess <- readline("Try to guess the word!") 
+  print("Ready to wait for a guess")
+  guess <- readline("Try to guess the word!")
+  print("A guess was made.")
   if(!(guess %in% solution_list)) {print("Word not in list, try another please!")}
   if(nchar(guess) != 5) {print("Word needs to be 5 letters long.")}
   # make sure it's in all caps
@@ -163,5 +166,14 @@ for (i in 1:5) {
 
 ```{r extra_code}
 # putting this extra code here in case we need it:
+
+# will need to track player's guess_history to summarize their game at the end (either when they guess the word or run out of guesses); some ideas below:
+guess_history <- data.frame(guesses = integer(),
+                            guess = character(),
+                            stringsAsFactors = FALSE)
+guess_history <- rbind(guess_history, data.frame(guesses = i, guess = guess))
+
+
+
 
 ```
