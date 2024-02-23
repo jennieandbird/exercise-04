@@ -22,7 +22,7 @@ file2 <- "https://raw.githubusercontent.com/jennieandbird/exercise-04/main/googl
 
 #Step 1: Create Function
 load_dictionary <- function(filename) {
-  v1 <- read_csv(filename)}
+  v1 <- readLines(filename)}
 
 # Once you have created your function, use that function to create two variables, solution_list and valid_list, that, respectively contain vectors of possible solution words and valid words to guess. That is, you should be able to run the following to create these two vectors
 
@@ -63,9 +63,9 @@ Running this code chunk (**Step_3**) will create a function (**pick_solution**) 
 
 pick_solution <- function(solution_list){
   # [1] remove all words that are not 5 letters in length
-  df <- filter(solution_list, nchar(solution_list$words) == 5)
+  five_letter_words <- solution_list[nchar(solution_list) == 5]
   # [2] randomly choose a single word
-  chooseword <- df[sample(nrow(df), 1), ]
+  chooseword <- sample(five_letter_words, 1)
   # [3] split that word into a vector
   str_extract_all(chooseword, boundary("character"))
 }
@@ -82,40 +82,51 @@ solutionvector <- unlist(solution)
 Now it's time to guess the word! Run the code chunk below (**Step_4**) to begin.
 
 ```{r Step_4}
-# The function doesn't work as a whole, so going to try line by line until it works. (See below.)
-play_wordle <- function(solutionvector, valid_list, num_bookguesses = 6){
+# Now, to tackle the bulk of the problem, create two more functions. The first should be called play_wordle() and it should take three arguments: [1] the answer to the puzzle (the value of your solution variable), [2] a list of valid guesses (the contents of your valid_list variable), and [3] a value for “number of guesses”, which you should set to the original Wordle game default of 6.
+
+evaluate_guess <- function(guess_vector, solutionvector){
+# set up a placeholder vector with 5 spaces
+  hintvector <- c(1, 2, 3, 4, 5)
+# identify the spots that are correct letter and correct order; mark them with "*"
+  for (i in 1:5) {
+   if (guess_vector[i] == solutionvector[i]) {
+     hintvector[i] <- "*"}}
+# identify the letters that exist in the word (in any order); mark them with "+"
+# also, mark the leftover letters with "-" to indicate they're not in the solution
+  for (i in 1:5) {
+    if (hintvector[i] != "*") {
+      lettersinword <- match(guess_vector[i], solutionvector)
+      if (!is.na(lettersinword)) {
+        hintvector[i] <- "+"}
+      else {hintvector[i] <- "-"}}}
+ return(hintvector)}
+
+play_wordle <- function(solutionvector, valid_list, num_guesses = 6){
   print("You have 6 chances to guess a 5-letter word.")
   letters_remaining <- LETTERS
   guesses <- 0
-  print(head(valid_list))
-  while(guesses < num_guesses) {
-    guess <- toupper(readline(prompt = "Try to guess the word: "))
-    print(guess)
-    print(head(valid_list))
-    # Validate the guess
-    if(nchar(guess) != 5) {
+    while(guesses < num_guesses) {
+      guess <- toupper(readline(prompt = "Try to guess the word: "))
+# Validate the guess
+      if(nchar(guess) != 5) {
       print("Word needs to be 5 letters long.")
-    } else if(!(guess %in% valid_list)) {
+      } else if(!(guess %in% valid_list)) {
       print("Word not in list, try another please!")
-    } else {
+      } else {
       guesses <- guesses + 1
-      # Process the guess if it's valid
+# Process the guess if it's valid
       guess_vector <- strsplit(guess, "")[[1]]
+# Give the player a hint
+hint <- print(evaluate_guess(guess_vector, solutionvector))
+# Tell player which letters are left
       letters_remaining <- setdiff(letters_remaining, guess_vector)
       print(paste("Letters remaining:", paste(letters_remaining, collapse = " ")))
-      
-      # Check for a correct guess
-      if(guess == solution) {
-        print(paste("Congratulations! You've guessed the word correctly in", guesses, "guess(es)!"))
-        return
       }
-      
-      if(guesses == num_guesses) {
-        print(paste("All guesses used. The solution was", solution))
-        return
-      }
-    }
-  }
+# Check for a correct guess
+      if (all(hint == "*")) {
+        print(paste("Congratulations! You've guessed the word correctly in", guesses, "guess(es)!"))}}
+  print(paste("All guesses used. The solution was", solution))
+  return(guesses)
 }
 
 play_wordle(solutionvector, solution_list, num_guesses = 6)
@@ -128,9 +139,5 @@ play_wordle(solutionvector, solution_list, num_guesses = 6)
 guess_history <- data.frame(guesses = integer(),
                             guess = character(),
                             stringsAsFactors = FALSE)
-guess_history <- rbind(guess_history, data.frame(guesses = i, guess = guess))
-
-
-
 
 ```
