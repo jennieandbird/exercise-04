@@ -9,7 +9,7 @@ output: html_document
 
 Run the code chunk below (**Step_1**) to load two lists of words, **solution_list** and **valid_list**.
 
-```{r Step_1}
+```{r include=FALSE}
 
 library(tidyverse)
 library(dplyr)
@@ -43,7 +43,7 @@ str(solution_list)
 
 Next, run the code chunk below (**Step_2**) to make sure the **solution_list** only includes words that also appear on **valid_list**.
 
-```{r Step_2}
+```{r include=FALSE}
 # Winnow your variable solution_list to only include words that are included in valid_list. There are multiple ways that you could do this, but the set operation function, intersection() is an easy way. Use R help to look at the documentation for the intersection() function to see if you can get that to work. 
 
 solution_list <- intersect(valid_list, solution_list)
@@ -58,7 +58,7 @@ print(solution_list)
 
 Running this code chunk (**Step_3**) will create a function (**pick_solution**) that randomly picks a word for you to guess. It will save that word as a list of letters (**solution**) and a vector of letters (**solutionvector**).
 
-```{r Step_3}
+```{r include=FALSE}
 # Write a custom function called pick_solution() that [1] removes all words from solution_list that are not 5 letters in length, [2] then randomly chooses a single word from those that remain, and [3] then splits that word into a vector of single-character elements. You should be able to pass your solution_list vector as the argument to the function.
 
 pick_solution <- function(solution_list){
@@ -81,7 +81,7 @@ solutionvector <- unlist(solution)
 
 Now it's time to guess the word! Run the code chunk below (**Step_4**) to begin.
 
-```{r Step_4}
+```{r include=FALSE}
 # Now, to tackle the bulk of the problem, create two more functions. The first should be called play_wordle() and it should take three arguments: [1] the answer to the puzzle (the value of your solution variable), [2] a list of valid guesses (the contents of your valid_list variable), and [3] a value for “number of guesses”, which you should set to the original Wordle game default of 6.
 
 evaluate_guess <- function(guess_vector, solutionvector){
@@ -133,11 +133,7 @@ play_wordle(solutionvector, solution_list, num_guesses = 6)
 ```
 
 ```{r extra_code}
-# putting this extra code here in case we need it:
-
-# will need to track player's guess_history to summarize their game at the end (either when they guess the word or run out of guesses); some ideas below:
-guess_history <- data.frame(guesses = integer(),
-                            guess = character(),
-                            stringsAsFactors = FALSE)
+# ```r
+rmarkdown::render("path/to/your_document.Rmd")
 
 ```
